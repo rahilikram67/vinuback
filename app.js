@@ -1686,13 +1686,7 @@ app.post('/getAllCashAccountsCustomer', function (req, res) {
 });
 
 app.post('/addbankstatement', function (req, res) {
-    var statement = {
-        date: req.body.date,
-        amount: req.body.amount,
-        description: req.body.description,
-        whose: req.body.whose
-    }
-    var bankstatement = new BankStatement(statement);
+    var bankstatement = new BankStatement(req.body);
     bankstatement.save(function (err, result) {
         if (err) {
             console.log(err);

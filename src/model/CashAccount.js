@@ -12,8 +12,6 @@ var NewUserSchema = new Schema({
     autoamount:Number,
     description:String,
     category:String,
-    bank:String,
-    code:Number,
     count:Number,
     whose:String
 },{strict:false});
