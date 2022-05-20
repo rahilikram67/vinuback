@@ -841,7 +841,6 @@ app.post('/getAllSuppliers', function (req, res) {
     });
 });
 app.post('/getAllCustomerInvoioce', function (req, res) {
-
     CustomerInvoice.find({ whose: req.body.whose }, function (err, docs) {
         res.send(docs);
     });
@@ -979,11 +978,10 @@ app.post('/allocateToCustomerInvoice', function (req, res) {
                     setTimeout(() => {
                         CashAccount.deleteMany({
                             whose: req.body.whose,
-                            $or: [{ amount: req.body.allocatedAmount }, { amount: 0 }],
-                            $or: [{ autoamount: -req.body.allocatedAmount }, { autoamount: 0 }],
-                            $or: [{ description: { $exists: false } }, { description: { $eq: "" } }],
+                            amount: 0,
+                            autoamount: 0,
                         }).exec()
-                    }, 1000)
+                    }, 3000)
                     res.send({ "msg": "updated" });
                 });
                 //code here to add in cash account ends              
@@ -1664,6 +1662,7 @@ app.post('/addCashAccountFromAdjusted', function (req, res) {
 app.post('/getAllCashAccounts', function (req, res) {
 
     var email = req.body.email;
+    console.log("email,", email)
     CashAccount.find({ whose: email }, function (err, docs) {
         if (docs.length) {
             res.send(docs);
@@ -1675,11 +1674,14 @@ app.post('/getAllCashAccounts', function (req, res) {
 
 app.post('/getAllCashAccountsCustomer', function (req, res) {
 
-    var email = req.body.email;
-    CashAccount.find({ whose: email, category: req.body.username }, function (err, docs) {
+    var { email, username } = req.body;
+    CashAccount.find({ whose: email, category: username }, function (err, docs) {
         if (docs.length) {
+            console.log("docs count:" + docs.length)
             res.send(docs);
+
         } else {
+            console.log("docs are empty")
             res.send({ "msg": "Available" });
         }
     });
